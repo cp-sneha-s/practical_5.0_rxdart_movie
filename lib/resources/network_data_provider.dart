@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:rxdart_example/model/movie.dart';
 
 class NetworkDataProvider {
+  late Movie movie;
+
   Future<MovieList> fetchMovieListFromApi() async {
     http.Response response = await http.get(
       Uri.parse('https://fake-movie-database-api.herokuapp.com/api?s=batman'),
@@ -17,8 +19,7 @@ class NetworkDataProvider {
     }
   }
 
-
-  Future<MovieList> fetchNovieListfromId(int id) async{
+  Future<MovieList> fetchNovieListfromId(int id) async {
     http.Response response = await http.get(
       Uri.parse('https://fake-movie-database-api.herokuapp.com/api?s=batman'),
     );
@@ -30,5 +31,17 @@ class NetworkDataProvider {
     } else {
       throw Exception('Could not load data');
     }
+  }
+
+  Future<Movie> getMoviebyId(String id) async {
+    MovieList list = await fetchMovieListFromApi();
+
+    for (int i = 0; i < list.movieList.length; i++) {
+      Movie movie = list.movieList[i];
+      if (movie.id == id) {
+        return movie;
+      }
+    }
+    return movie;
   }
 }

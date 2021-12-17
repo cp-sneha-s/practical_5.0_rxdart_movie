@@ -7,7 +7,7 @@ class MoviesBloc{
   final repository = Repository();
   final _moviesFetcher = PublishSubject<MovieList>();
 
-   Stream<MovieList>   get allMovies=> _moviesFetcher.stream;
+   Stream<MovieList> get allMovies=> _moviesFetcher.stream;
   fetchAllMovies() async{
     MovieList movieList = await repository.fetchAllMovies();
     _moviesFetcher.sink.add(movieList);

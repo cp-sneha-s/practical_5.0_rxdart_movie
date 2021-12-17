@@ -58,10 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => MovieDetailScreen(
-                                          title: movie.title,
-                                          imageUrl: movie.imageUrl,
                                           id: movie.id,
-                                          year: movie.releaseYear,
                                         )));
                           },
                           child: Image.network(
