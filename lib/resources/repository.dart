@@ -7,6 +7,6 @@ class Repository{
   Future<MovieList> fetchAllMovies() =>
     _networkDataProvider.fetchMovieListFromApi();
 
-   Future<MovieList> fetchMovieById(int id)=>
-       _networkDataProvider.fetchNovieListfromId(id);
+   Future<Movie> fetchMovieById(String id)=>
+       _networkDataProvider.fetchMoviebyId(id);
 }

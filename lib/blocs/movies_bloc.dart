@@ -1,20 +1,20 @@
 import 'package:rxdart_example/model/movie.dart';
 import 'package:rxdart_example/resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:rxdart_example/service_locator.dart';
 
-class MoviesBloc{
-  static final MoviesBloc bloc = MoviesBloc();
-  final repository = Repository();
-  final _moviesFetcher = PublishSubject<MovieList>();
+class MoviesBloc {
+  final repository = getIt.get<Repository>();
+  final _movie = PublishSubject<Movie>();
 
-   Stream<MovieList> get allMovies=> _moviesFetcher.stream;
-  fetchAllMovies() async{
-    MovieList movieList = await repository.fetchAllMovies();
-    _moviesFetcher.sink.add(movieList);
+  fetchMovieById(String id) async {
+    Movie movie = await repository.fetchMovieById(id);
+    _movie.sink.add(movie);
   }
 
-  dispose(){
-    _moviesFetcher.close();
-  }
+  Stream<Movie> get movieDetail => _movie.stream;
 
+  dispose() {
+    _movie.close();
+  }
 }

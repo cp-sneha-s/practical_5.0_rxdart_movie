@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart_example/blocs/movies_bloc.dart';
 import 'package:rxdart_example/model/movie.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rxdart_example/resources/network_data_provider.dart';
+import 'package:rxdart_example/service_locator.dart';
 
 class MovieDetailScreen extends StatefulWidget {
   String id;
@@ -16,13 +19,17 @@ class MovieDetailScreen extends StatefulWidget {
 }
 
 class _MovieDetailState extends State<MovieDetailScreen> {
-  NetworkDataProvider networkDataProvider = NetworkDataProvider();
-  late Future<Movie> futureMovie;
+  MoviesBloc movieBloc = getIt.get<MoviesBloc>();
 
   @override
   void initState() {
-    futureMovie = networkDataProvider.getMoviebyId(widget.id);
+    movieBloc.fetchMovieById(widget.id);
     super.initState();
+  }
+  @override
+  void dispose() {
+   movieBloc.dispose();
+    super.dispose();
   }
 
   @override
@@ -35,8 +42,8 @@ class _MovieDetailState extends State<MovieDetailScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: FutureBuilder(
-          future: futureMovie,
+        child: StreamBuilder(
+          stream: movieBloc.movieDetail,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               Movie movie = snapshot.data as Movie;
@@ -45,9 +52,13 @@ class _MovieDetailState extends State<MovieDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Image.network(
-                    movie.imageUrl ??
+                  CachedNetworkImage(
+                    imageUrl: movie.imageUrl ??
                         'https://images-na.ssl-images-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_.jpg',
+                    placeholder: (context,url)=>const CircularProgressIndicator(),
+                    errorWidget: (context,url,error){
+                      return const Icon(Icons.error);
+                    },
                     fit: BoxFit.cover,
                   ),
                   Column(

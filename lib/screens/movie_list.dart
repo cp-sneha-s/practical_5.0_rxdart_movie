@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart_example/blocs/movie_list_bloc.dart';
 import 'package:rxdart_example/blocs/movies_bloc.dart';
 import 'package:rxdart_example/model/movie.dart';
-import 'package:rxdart_example/resources/repository.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:rxdart_example/service_locator.dart';
 
 import 'movie_detail.dart';
 
@@ -14,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  MoviesBloc bloc = MoviesBloc();
+  MovieListBloc bloc = getIt.get<MovieListBloc>();
 
   @override
   void initState() {
@@ -34,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.teal,
-            title: const Text('Movie'),
+            title: const Text('Movies'),
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -61,11 +63,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                           id: movie.id,
                                         )));
                           },
-                          child: Image.network(
-                            movie.imageUrl ??
-                                'https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821__340.jpg',
-                            height: 100,
-                            width: 100,
+                          child: CachedNetworkImage(
+                            imageUrl: movie.imageUrl ??
+                                'https://images-na.ssl-images-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_.jpg',
+                           // placeholder: (context, url) =>
+                              //  const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) {
+                              return const Icon(Icons.error);
+                            },
                             fit: BoxFit.cover,
                           ),
                         );
