@@ -32,49 +32,46 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Colors.teal,
             title: const Text('Movies'),
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: StreamBuilder(
-              stream: bloc.allMovies,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  MovieList list = snapshot.data as MovieList;
-                  return GridView.builder(
-                      itemCount: list.movieList.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 8,
-                              crossAxisSpacing: 8),
-                      itemBuilder: (context, index) {
-                        Movie movie = list.movieList[index];
-                        return InkWell(
-                          onDoubleTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MovieDetailScreen(
-                                          id: movie.id,
-                                        )));
+          body: StreamBuilder(
+            stream: bloc.allMovies,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                MovieList list = snapshot.data as MovieList;
+                return GridView.builder(
+                    itemCount: list.movieList.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8),
+                    itemBuilder: (context, index) {
+                      Movie movie = list.movieList[index];
+                      return InkWell(
+                        onDoubleTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MovieDetailScreen(
+                                        id: movie.id,
+                                      )));
+                        },
+                        child: CachedNetworkImage(
+                          imageUrl: movie.imageUrl ??
+                              'https://images-na.ssl-images-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_.jpg',
+                          // placeholder: (context, url) =>
+                          //  const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) {
+                            return const Icon(Icons.error);
                           },
-                          child: CachedNetworkImage(
-                            imageUrl: movie.imageUrl ??
-                                'https://images-na.ssl-images-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_.jpg',
-                            // placeholder: (context, url) =>
-                            //  const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) {
-                              return const Icon(Icons.error);
-                            },
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      });
-                } else if (snapshot.hasError) {
-                  return Text('Error: ' + snapshot.error.toString());
-                }
-                return const Center(child: CircularProgressIndicator());
-              },
-            ),
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    });
+              } else if (snapshot.hasError) {
+                return Text('Error: ' + snapshot.error.toString());
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
           )),
     );
   }
