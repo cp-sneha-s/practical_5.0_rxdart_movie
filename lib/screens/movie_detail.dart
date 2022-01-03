@@ -26,11 +26,6 @@ class _MovieDetailState extends State<MovieDetailScreen> {
     movieBloc.fetchMovieById(widget.id);
     super.initState();
   }
-  @override
-  void dispose() {
-   movieBloc.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +50,9 @@ class _MovieDetailState extends State<MovieDetailScreen> {
                   CachedNetworkImage(
                     imageUrl: movie.imageUrl ??
                         'https://images-na.ssl-images-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_.jpg',
-                    placeholder: (context,url)=>const CircularProgressIndicator(),
-                    errorWidget: (context,url,error){
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) {
                       return const Icon(Icons.error);
                     },
                     fit: BoxFit.cover,

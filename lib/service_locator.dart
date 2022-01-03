@@ -6,7 +6,7 @@ import 'package:rxdart_example/resources/repository.dart';
 
 GetIt getIt = GetIt.instance;
 
-void setUpLocator(){
+void setUpLocator() {
   getIt.registerLazySingleton(() => Repository());
   getIt.registerSingleton(NetworkDataProvider());
   getIt.registerLazySingleton(() => MovieListBloc());

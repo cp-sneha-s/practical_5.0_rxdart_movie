@@ -16,7 +16,8 @@ dependencies:
   bloc: ^8.0.1
   json_annotation: ^4.4.0
   rxdart: ^0.27.3
-  get_it:
+  get_it: ^7.2.0
+  mockito: ^5.0.17
 
 dev_dependencies:
   flutter_test:

@@ -4,7 +4,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:rxdart_example/service_locator.dart';
 
 class MoviesBloc {
-  final repository = getIt.get<Repository>();
+  final repository = getIt<Repository>();
   final _movie = PublishSubject<Movie>();
 
   fetchMovieById(String id) async {

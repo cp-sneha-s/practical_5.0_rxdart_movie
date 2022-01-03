@@ -1,12 +1,13 @@
 import 'package:rxdart_example/model/movie.dart';
 import 'package:rxdart_example/resources/network_data_provider.dart';
+import 'package:rxdart_example/service_locator.dart';
 
-class Repository{
-  final NetworkDataProvider _networkDataProvider = NetworkDataProvider();
+class Repository {
+  var networkDataProvider = getIt<NetworkDataProvider>();
 
   Future<MovieList> fetchAllMovies() =>
-    _networkDataProvider.fetchMovieListFromApi();
+      networkDataProvider.fetchMovieListFromApi();
 
-   Future<Movie> fetchMovieById(String id)=>
-       _networkDataProvider.fetchMoviebyId(id);
+  Future<Movie> fetchMovieById(String id) =>
+      networkDataProvider.fetchMoviebyId(id);
 }

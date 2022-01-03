@@ -16,18 +16,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  MovieListBloc bloc = getIt.get<MovieListBloc>();
+  MovieListBloc bloc = getIt<MovieListBloc>();
 
   @override
   void initState() {
     bloc.fetchAllMovies();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
   }
 
   @override
@@ -66,8 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: CachedNetworkImage(
                             imageUrl: movie.imageUrl ??
                                 'https://images-na.ssl-images-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_.jpg',
-                           // placeholder: (context, url) =>
-                              //  const CircularProgressIndicator(),
+                            // placeholder: (context, url) =>
+                            //  const CircularProgressIndicator(),
                             errorWidget: (context, url, error) {
                               return const Icon(Icons.error);
                             },
