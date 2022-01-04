@@ -6,6 +6,7 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -30,46 +31,56 @@ class MockNetworkDataProvider extends Mock implements NetworkDataProvider {
 }
 
 void main() {
-  Repository repository;
-  // setUp(() {
-  //   setUpLocator();
-  //   repository = getIt<Repository>();
-  //   repository.networkDataProvider = MockNetworkDataProvider();
-  // });
-
-  // group('Given userList Page Loads', () {
-  //   test('page should load a list of user from api', () async {
-  //     List<Movie> myList =
-  //         await repository.fetchAllMovies().then((value) => value.movieList);
-  //     expect(myList.length, 4);
-  //     expect(myList.first.title, 'singham');
-  //   });
-  // });
-
-  group('movie list screen widget testing', () {
+  var repository;
+  setUp(() {
     setUpLocator();
     repository = getIt<Repository>();
     repository.networkDataProvider = MockNetworkDataProvider();
-    final _moviesFetcher = PublishSubject<MovieList>();
-    Stream<MovieList> allMovies = _moviesFetcher.stream;
-    fetchAllMovies() async {
-      MovieList movieList = await repository.fetchAllMovies();
-      _moviesFetcher.sink.add(movieList);
-    }
+  });
 
-    testWidgets(
-        'streambuilder in movieList screen load the data from api as stream ',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(StreamBuilder(
-        builder: (context, snapshot) {
-          print(snapshot.data.toString());
-          return Text(snapshot.data.toString());
-        },
-        stream: allMovies,
-      ));
-      await tester.pumpAndSettle();
-      await fetchAllMovies();
-      expect(find.text('singham'), findsNothing);
+  group('Given userList Page Loads', () {
+    test('page should load a list of user from api', () async {
+      List<Movie> myList =
+          await repository.fetchAllMovies().then((value) => value.movieList);
+      expect(myList.length, 4);
+      expect(myList.first.title, 'singham');
     });
+  });
+
+  final _moviesFetcher = PublishSubject<MovieList>();
+  Stream<MovieList> allMovies = _moviesFetcher.stream;
+  fetchAllMovies() async {
+    MovieList movieList = await repository.fetchAllMovies();
+    print('fetchAllMovies: ' + movieList.movieList.length.toString());
+    _moviesFetcher.sink.add(movieList);
+  }
+
+  testWidgets(
+      'Streambuilder in movieList screen load the data from api as stream ',
+      (WidgetTester tester) async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    await tester.pumpWidget(MaterialApp(
+      home: HomeScreen(
+        
+      ),
+    ));
+    expect(find.text('Movies'), findsOneWidget);
+
+    // await tester.pumpWidget(MaterialApp(
+    //   home: StreamBuilder<MovieList>(
+    //     stream: allMovies,
+    //     builder: (context, snapshot) {
+    //       print(
+    //           'snapshot data from Streambuilder: ' + snapshot.data.toString());
+    //       MovieList list = snapshot.data as MovieList;
+    //       Movie movie = list.movieList[0];
+    //       print(movie.title.toString());
+    //       return Text(movie.title);
+    //     },
+    //   ),
+    // ));
+    // await fetchAllMovies();
+    // await tester.pump(Duration.zero);
+    // expect(find.text('singham'), findsOneWidget);
   });
 }
