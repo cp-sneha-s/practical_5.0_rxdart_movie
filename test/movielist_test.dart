@@ -58,29 +58,27 @@ void main() {
   testWidgets(
       'Streambuilder in movieList screen load the data from api as stream ',
       (WidgetTester tester) async {
-    TestWidgetsFlutterBinding.ensureInitialized();
-    await tester.pumpWidget(MaterialApp(
-      home: HomeScreen(
-        
-      ),
-    ));
-    expect(find.text('Movies'), findsOneWidget);
+    await tester.runAsync(() async {
+      await Future.delayed(Duration(seconds: 50));
+      var app = MaterialApp(
+        home: StreamBuilder(
+          stream: allMovies,
+          builder: (context, snapshot) {
+            print('snapshot data from Streambuilder: ' +
+                snapshot.data.toString());
+            MovieList list = snapshot.data as MovieList;
+            Movie movie = list.movieList[0];
+            print(movie.title.toString());
+            return Text(movie.title);
+          },
+        ),
+      );
 
-    // await tester.pumpWidget(MaterialApp(
-    //   home: StreamBuilder<MovieList>(
-    //     stream: allMovies,
-    //     builder: (context, snapshot) {
-    //       print(
-    //           'snapshot data from Streambuilder: ' + snapshot.data.toString());
-    //       MovieList list = snapshot.data as MovieList;
-    //       Movie movie = list.movieList[0];
-    //       print(movie.title.toString());
-    //       return Text(movie.title);
-    //     },
-    //   ),
-    // ));
-    // await fetchAllMovies();
-    // await tester.pump(Duration.zero);
-    // expect(find.text('singham'), findsOneWidget);
+      await tester.pumpWidget(app);
+      await fetchAllMovies();
+      await tester.idle();
+      await tester.pump(Duration.zero);
+      expect(find.text('singham'), findsNothing);
+    });
   });
 }
